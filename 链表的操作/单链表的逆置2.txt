@@ -1,0 +1,210 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<malloc.h>
+#define MaxSize 50
+typedef char ElemType;
+typedef struct LNode
+{
+    ElemType data;
+    struct LNode *next;
+    int Length=0;
+}LinkList;
+int GreateList(LinkList *&L,ElemType a[],int n)
+{
+    LinkList *s,*r;
+    int i;
+    L=(LinkList *)malloc(sizeof(LinkList));
+    r=L;
+    for(i=0;i<n;i++)
+    {
+        s=(LinkList *)malloc(sizeof(LinkList));
+        s->data=a[i];
+        r=s;
+    }
+    r->next=NULL;
+
+}
+void InitList(LinkList *&L)
+{
+    L=(LinkList *)malloc(sizeof(LinkList));
+    L->next=NULL;
+}
+int DestroyList(LinkList *&L)
+{
+    LinkList *pre=L,*p=L->next;
+    while(p!=NULL)
+    {
+        free(pre);
+        {
+            pre=p;
+            p=pre->next;
+        }
+        free(pre);
+    }
+    return 0;
+}
+int ListLength(LinkList *L)
+{
+    int n=0;
+    LinkList *p=L;
+    while(p->next!=NULL)
+    {
+        n++;
+    p=p->next;
+    }
+    return(n);
+}
+void DispList(LinkList *L)
+{
+    LinkList *p=L->next;
+    while(p!=NULL)
+    {
+        printf("%c",p->data);
+        p=p->next;
+    }
+    printf("\n");
+}
+int GetElem(LinkList *L,int i,ElemType &e)
+{
+    int j=0;
+    LinkList *p=L;
+    while(j<i&&p!=NULL)
+    {
+        j++;
+        p=p->next;
+    }
+    if(p==NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        e=p->data;
+        return 1;
+    }
+}
+int LocateElem(LinkList *L,ElemType e)
+{
+    int i=1;
+    LinkList *p=L->next;
+    while(p!=NULL&&p->data!=e)
+    {
+        p=p->next;
+        i++;
+    }
+    if(p==NULL)
+    {
+        return (0);
+    }
+    else
+    {
+        return (i);
+    }
+}
+int ListInsert(LinkList *&L,int i,ElemType e)
+{
+    int j=0;
+    LinkList *p=L,*s;
+    while(j<i-1&&p!=NULL)
+    {
+        j++;
+        p=p->next;
+    }
+    if(p==NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        s=(LinkList *)malloc(sizeof(LinkList));
+        s->data=e;
+        s->next=p->next;
+        p->next=s;
+        return 1;
+    }
+}
+int ListDelete(LinkList *&L,int i,ElemType &e)
+{
+    int j=0;
+    LinkList *p=L,*q;
+    while(j<i-1&&p!=NULL)
+    {
+        j++;
+        p=p->next;
+    }
+    if(p==NULL)
+    {
+        return (0);
+    }
+    else
+    {
+        q=p->next;
+        if(p==NULL)
+        {
+            return 0;
+        }
+        else
+        {
+            e=q->data;
+            p=p->next=q->next;
+            free(q);
+            return 1;
+        }
+
+    }
+}
+int ListEmpty(LinkList *L)
+{
+    return(L->next==NULL);
+}
+void fun(LinkList *ha)
+  {
+      LinkList *p=ha->next,*L,*q;
+      L=(LinkList *)malloc(sizeof(LinkList));  /*创建头结点*/
+      L->next=NULL;
+            /*rb始终指向hb的末尾结点*/
+      while (p!=NULL)
+      {
+             q=p->next;
+             p->next=L->next;
+             L->next=p;
+             p=q;
+      }
+     printf("(13)输出逆置后的单链表L:");
+	 DispList(L);
+  }
+int main()
+{
+    LinkList *L;
+	ElemType e;
+	 ElemType temp;
+	printf("(1)初始化顺序表L\n");
+	InitList(L);
+	printf("(2)依次采用尾插法插入a,b,c,d,e元素\n");
+	ListInsert(L,1,'a');
+	ListInsert(L,2,'b');
+	ListInsert(L,3,'c');
+	ListInsert(L,4,'d');
+	ListInsert(L,5,'e');
+	printf("(3)输出顺序表L:");
+	DispList(L);
+	printf("(4)顺序表L长度=%d\n",ListLength(L));
+	printf("(5)顺序表L为%s\n",(ListEmpty(L)?"空":"非空"));
+	GetElem(L,3,e);
+	printf("(6)顺序表L的第3个元素=%c\n",e);
+	printf("(7)元素a的位置=%d\n",LocateElem(L,'a'));
+	printf("(8)在第4个元素位置上插入f元素\n");
+	ListInsert(L,4,'f');
+	printf("(9)输出顺序表L:");
+	DispList(L);
+	printf("(10)删除L的第3个元素\n");
+    ListDelete(L,3,e);
+	printf("(11)输出顺序表L:");
+	DispList(L);
+	printf("(12)逆置线性表前的L:");
+	DispList(L);
+    fun(L);
+	printf("(14)释放顺序表L\n");
+	DestroyList(L);
+	return 0;
+}
